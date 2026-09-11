@@ -10,7 +10,7 @@
 CC = g++
 
 # define any compile-time flags
-CFLAGS = -Wall -g -O2 -Wno-unused-label
+CFLAGS = -Wall -g -Wno-unused-label
 
 # define any directories containing header files other than /usr/include
 # e.g. -I/home/newhall/include  -I../include
@@ -26,6 +26,7 @@ LFLAGS =
 #   option, something like (this will link in libmylib.so and libm.so:
 #   -L/home/newhall/lib  -L../lib
 LIBS =
+
 
 # define the C source files
 SRCS = ./src/host/3d_rendering_host.cpp ./src/host/utils.cpp ./src/host/check_result.cpp ./src/sw/rendering_sw.cpp
