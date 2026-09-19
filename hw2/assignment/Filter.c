@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "App.h"
+#include "stopwatch_c.h"
+
 #define INPUT_HEIGHT (4000)
 #define INPUT_WIDTH (6000)
 
@@ -13,6 +15,11 @@ unsigned Coefficients[] = {2, 15, 62, 98, 62, 15, 2};
 
 void Filter_horizontal(const unsigned char * Input, unsigned char * Output)
 {
+  stopwatch_handle sw = stopwatch_create();
+  stopwatch_start(sw);
+
+
+  
   LOOP1: for (int Y = 0; Y < INPUT_HEIGHT; Y++)
     LOOP2: for (int X = 0; X < OUTPUT_WIDTH; X++)
     {
@@ -21,10 +28,20 @@ void Filter_horizontal(const unsigned char * Input, unsigned char * Output)
         Sum += Coefficients[i] * Input[Y * INPUT_WIDTH + X + i];
       Output[Y * OUTPUT_WIDTH + X] = Sum >> 8;
     }
+    
+  stopwatch_stop(sw);
+
+  printf("Filter Horizontal latency: %lf\n", stopwatch_latency(sw));
+  printf("Filter Horizontal avg latency: %lf\n", stopwatch_avg_latency(sw));
 }
 
 void Filter_vertical(const unsigned char * Input, unsigned char * Output)
 {
+  stopwatch_handle sw = stopwatch_create();
+  stopwatch_start(sw);
+
+  
+
   LOOP1: for (int Y = 0; Y < OUTPUT_HEIGHT; Y++)
     LOOP2: for (int X = 0; X < OUTPUT_WIDTH; X++)
     {
@@ -33,6 +50,11 @@ void Filter_vertical(const unsigned char * Input, unsigned char * Output)
         Sum += Coefficients[i] * Input[(Y + i) * OUTPUT_WIDTH + X];
       Output[Y * OUTPUT_WIDTH + X] = Sum >> 8;
     }
+    
+  stopwatch_stop(sw);
+
+  printf("Filter Vertical latency: %lf\n", stopwatch_latency(sw));
+  printf("Filter Vertical avg latency: %lf\n", stopwatch_avg_latency(sw));
 }
 
 void Filter(const unsigned char * Input, unsigned char * Output)

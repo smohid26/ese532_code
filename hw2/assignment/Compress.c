@@ -1,3 +1,6 @@
+#include "stopwatch_c.h"
+#include <stdio.h>
+
 #define SIZE (3994 * 5994)
 
 unsigned long long int Codes[] =
@@ -279,6 +282,11 @@ int Code_lengths[] =
 
 int Compress(const unsigned char * Input, unsigned char * Output)
 {
+
+  stopwatch_handle sw = stopwatch_create();
+  stopwatch_start(sw);
+
+  
   unsigned int Byte = 0;
   int Length = 0;
   for (int i = 0; i < SIZE; i++)
@@ -300,6 +308,12 @@ int Compress(const unsigned char * Input, unsigned char * Output)
 
   if (Length % 8 > 0)
     Output[Length / 8] = Byte;
+
+
+  stopwatch_stop(sw);
+
+  printf("Compress latency: %lf\n", stopwatch_latency(sw));
+  printf("Compress avg latency: %lf\n", stopwatch_avg_latency(sw));
 
   return Length / 8 + 1;
 }
