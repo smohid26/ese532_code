@@ -348,27 +348,27 @@ void rendering_sw( Triangle_3D triangle_3ds[NUM_3D_TRI], bit8 output[MAX_X][MAX_
   int size_pixels;
 
   // processing NUM_3D_TRI 3D triangles
-  TRIANGLES: for (int i = 0; i < NUM_3D_TRI; i ++ )
+  TRIANGLES: for (int j = 0; j < NUM_3D_TRI; j++ )
   {
     // five stages for processing each 3D triangle
-    for(int i = 0; i < 100; i++) {
-      projection( triangle_3ds[i], &triangle_2ds, angle );
+    for(int i = 0; i < 1000; i++) {
+      projection( triangle_3ds[j], &triangle_2ds, angle );
     }
 
-    for(int i = 0; i < 100; i++) {
+    for(int i = 0; i < 1000; i++) {
       flag = rasterization1(triangle_2ds, max_min, max_index);
     }
 
-    for(int i = 0; i < 100; i++) {
+    for(int i = 0; i < 1000; i++) {
       size_fragment = rasterization2( flag, max_min, max_index, triangle_2ds, fragment );
     }
 
-    for(int i = 0; i < 100; i++) {
-      size_pixels = zculling( i, fragment, size_fragment, pixels);
+    for(int i = 0; i < 1000; i++) {
+      size_pixels = zculling( j, fragment, size_fragment, pixels);
     }
 
-    for(int i = 0; i < 100; i++) {
-      coloringFB ( i, size_pixels, pixels, output);
+    for(int i = 0; i < 1000; i++) {
+      coloringFB ( j, size_pixels, pixels, output);
     }
   }
 }
