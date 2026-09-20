@@ -40,8 +40,51 @@ int main()
       th.join();
     }
 
-    Filter(Temp_data[0], Temp_data[1]);
-    Differentiate(Temp_data[1], Temp_data[2]);
+    ths.clear();
+
+    unsigned char * temp = (unsigned char *)malloc(FRAME_SIZE);
+
+    ths.push_back(std::thread(&Filter_horizontal_coarse, Temp_data[0], temp, 0, FILTER_INPUT_HEIGHT/2));
+    ths.push_back(std::thread(&Filter_horizontal_coarse, Temp_data[0], temp, FILTER_INPUT_HEIGHT / 2, FILTER_INPUT_HEIGHT));
+
+    pin_thread_to_cpu(ths[0], 0);
+    pin_thread_to_cpu(ths[1], 1);
+
+    for (auto &th : ths)
+    {
+      th.join();
+    }
+
+    ths.clear();
+
+    ths.push_back(std::thread(&Filter_vertical_coarse, temp, Temp_data[1], 0, FILTER_OUTPUT_WIDTH/2));
+    ths.push_back(std::thread(&Filter_vertical_coarse, temp, Temp_data[1], FILTER_OUTPUT_WIDTH / 2, FILTER_OUTPUT_WIDTH));
+
+    pin_thread_to_cpu(ths[0], 0);
+    pin_thread_to_cpu(ths[1], 1);
+
+    for (auto &th : ths)
+    {
+      th.join();
+    }
+
+    ths.clear();
+
+    ths.push_back(std::thread(&Differentiate_coarse, Temp_data[1], Temp_data[2], 0, FILTER_OUTPUT_HEIGHT/2));
+    ths.push_back(std::thread(&Differentiate_coarse, Temp_data[1], Temp_data[2], FILTER_OUTPUT_HEIGHT / 2, FILTER_OUTPUT_HEIGHT));
+
+    pin_thread_to_cpu(ths[0], 0);
+    pin_thread_to_cpu(ths[1], 1);
+
+    for (auto &th : ths)
+    {
+      th.join();
+    }
+
+    ths.clear();
+
+    //Filter(Temp_data[0], Temp_data[1]);
+    //Differentiate(Temp_data[1], Temp_data[2]);
     Size = Compress(Temp_data[2], Output_data);
   }
   total_time.stop();
@@ -57,3 +100,4 @@ int main()
 
   return EXIT_SUCCESS;
 }
+

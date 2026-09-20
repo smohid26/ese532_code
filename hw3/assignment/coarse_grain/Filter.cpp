@@ -10,9 +10,9 @@
 
 unsigned Coefficients[] = {2, 15, 62, 98, 62, 15, 2};
 
-void Filter_horizontal(const unsigned char *Input, unsigned char *Output)
+void Filter_horizontal_coarse(const unsigned char *Input, unsigned char *Output, int Y_Start_Idx, int Y_End_Idx)
 {
-  for (int Y = 0; Y < INPUT_HEIGHT; Y++)
+  for (int Y = Y_Start_Idx; Y < Y_End_Idx; Y++)
     for (int X = 0; X < OUTPUT_WIDTH; X++)
     {
       unsigned int Sum = 0;
@@ -22,10 +22,10 @@ void Filter_horizontal(const unsigned char *Input, unsigned char *Output)
     }
 }
 
-void Filter_vertical(const unsigned char *Input, unsigned char *Output)
+void Filter_vertical_coarse(const unsigned char *Input, unsigned char *Output, int X_Start_Idx, int X_End_Idx)
 {
   for (int Y = 0; Y < OUTPUT_HEIGHT; Y++)
-    for (int X = 0; X < OUTPUT_WIDTH; X++)
+    for (int X = X_Start_Idx; X < X_End_Idx; X++)
     {
       unsigned int Sum = 0;
       for (int i = 0; i < FILTER_LENGTH; i++)
@@ -38,8 +38,8 @@ void Filter(const unsigned char *Input, unsigned char *Output)
 {
   unsigned char *Temp = (unsigned char *)malloc(INPUT_HEIGHT * OUTPUT_WIDTH);
 
-  Filter_horizontal(Input, Temp);
-  Filter_vertical(Temp, Output);
+  Filter_horizontal_coarse(Input, Temp, 0, INPUT_HEIGHT);
+  Filter_vertical_coarse(Temp, Output, 0, OUTPUT_WIDTH);
 
   free(Temp);
 }
